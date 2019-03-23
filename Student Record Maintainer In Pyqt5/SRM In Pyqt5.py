@@ -33,7 +33,7 @@ class InsertDialog(QDialog):
         layout.addWidget(self.nameinput)
 
         self.branchinput = QComboBox()
-        self.branchinput.addItem("Chemicla Engg")
+        self.branchinput.addItem("Chemical Engg")
         self.branchinput.addItem("Civil")
         self.branchinput.addItem("Electrical")
         self.branchinput.addItem("Electronics and Communication")
