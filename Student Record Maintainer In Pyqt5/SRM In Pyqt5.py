@@ -20,7 +20,7 @@ class InsertDialog(QDialog):
         self.setFixedWidth(300)
         self.setFixedHeight(300)
 
-        self.setWindowTitle("Update Student")
+        self.setWindowTitle("Insert Student Data")
         self.setFixedWidth(300)
         self.setFixedHeight(300)
 
