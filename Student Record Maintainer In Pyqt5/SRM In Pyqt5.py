@@ -181,7 +181,8 @@ class AboutDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
 
         layout = QVBoxLayout()
-
+        
+        self.setWindowTitle("About")
         title = QLabel("Student Record Maintainer In PyQt5")
         font = title.font()
         font.setPointSize(20)
