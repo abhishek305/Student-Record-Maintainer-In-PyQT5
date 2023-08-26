@@ -49,45 +49,68 @@ class InsertDialog(QDialog):
         self.seminput.addItem("5")
         self.seminput.addItem("6")
         self.seminput.addItem("7")
-        self.seminput.addItem("8")
-        layout.addWidget(self.seminput)
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+import sys
+import sqlite3
 
-        self.mobileinput = QLineEdit()
-        self.mobileinput.setPlaceholderText("Mobile No.")
-        layout.addWidget(self.mobileinput)
+class InsertDialog(QDialog):
+    def __init__(self, *args, **kwargs):
+        super(InsertDialog, self).__init__(*args, **kwargs)
 
-        self.addressinput = QLineEdit()
-        self.addressinput.setPlaceholderText("Address")
-        layout.addWidget(self.addressinput)
+        self.QBtn = QPushButton("Register")
+
+        self.setWindowTitle("Add Student")
+        self.setFixedSize(300, 300)
+
+        self.QBtn.clicked.connect(self.add_student)
+
+        layout = QVBoxLayout()
+
+        self.name_input = QLineEdit()
+        self.name_input.setPlaceholderText("Name")
+        layout.addWidget(self.name_input)
+
+        self.branch_input = QComboBox()
+        self.branch_input.addItems(["Chemical Engg", "Civil", "Electrical", "Electronics and Communication", "Computer Engineering", "Information Technology"])
+        layout.addWidget(self.branch_input)
+
+        self.sem_input = QComboBox()
+        self.sem_input.addItems(["1", "2", "3", "4", "5", "6", "7", "8"])
+        layout.addWidget(self.sem_input)
+
+        self.mobile_input = QLineEdit()
+        self.mobile_input.setPlaceholderText("Mobile No.")
+        layout.addWidget(self.mobile_input)
+
+        self.address_input = QLineEdit()
+        self.address_input.setPlaceholderText("Address")
+        layout.addWidget(self.address_input)
 
         layout.addWidget(self.QBtn)
         self.setLayout(layout)
 
-    def addstudent(self):
+    def add_student(self):
+        name = self.name_input.text()
+        branch = self.branch_input.currentText()
+        sem = int(self.sem_input.currentText())  # Convert to integer
+        mobile = int(self.mobile_input.text())   # Convert to integer
+        address = self.address_input.text()
 
-        name = ""
-        branch = ""
-        sem = -1
-        mobile = ""
-        address = ""
-
-        name = self.nameinput.text()
-        branch = self.branchinput.itemText(self.branchinput.currentIndex())
-        sem = self.seminput.itemText(self.seminput.currentIndex())
-        mobile = self.mobileinput.text()
-        address = self.addressinput.text()
         try:
             self.conn = sqlite3.connect("database.db")
             self.c = self.conn.cursor()
-            self.c.execute("INSERT INTO students (name,branch,sem,Mobile,address) VALUES (?,?,?,?,?)",(name,branch,sem,mobile,address))
+            self.c.execute("INSERT INTO students (name, branch, sem, mobile, address) VALUES (?, ?, ?, ?, ?)",
+                           (name, branch, sem, mobile, address))
             self.conn.commit()
             self.c.close()
             self.conn.close()
-            QMessageBox.information(QMessageBox(),'Successful','Student is added successfully to the database.')
+            QMessageBox.information(QMessageBox(), 'Successful', 'Student is added successfully to the database.')
             self.close()
-        except Exception:
-            QMessageBox.warning(QMessageBox(), 'Error', 'Could not add student to the database.')
-
+        except sqlite3.Error as e:
+            QMessageBox.warning(QMessageBox(), 'Error', f'Could not add student to the database. Error: {e}')
+            
 class SearchDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(SearchDialog, self).__init__(*args, **kwargs)
@@ -316,10 +339,9 @@ class MainWindow(QMainWindow):
     def about(self):
         dlg = AboutDialog()
         dlg.exec_()
-
-
+        
 app = QApplication(sys.argv)
-if(QDialog.Accepted == True):
+if QDialog.Accepted == True:
     window = MainWindow()
     window.show()
     window.loaddata()
